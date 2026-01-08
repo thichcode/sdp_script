@@ -1,15 +1,32 @@
-# Service Desk Plus CMDB CI Fields Update Script
+# Service Desk Plus Automation Scripts
 
-This Python script provides functionality to update Configuration Item (CI) fields in Service Desk Plus On-Prem CMDB using the REST API.
+This repository contains Python scripts for automating Service Desk Plus On-Prem operations using the REST API.
 
-## Features
+## Available Scripts
 
+### 1. CMDB CI Fields Update Script (`update_ci_cmdb.py`)
+
+Updates Configuration Item (CI) fields in Service Desk Plus CMDB.
+
+**Features:**
 - Update single or multiple CI fields in bulk
 - Retrieve CI details before updating
 - Search for CIs based on criteria
 - Support for both Basic Authentication and Technician Key authentication
 - Comprehensive logging and error handling
 - Configurable via JSON files
+
+### 2. User to Technician Conversion Script (`update_user_to_technician.py`)
+
+Converts users to technicians and assigns sites, groups, and roles.
+
+**Features:**
+- Convert users to technicians with full profile setup
+- Assign technicians to multiple sites
+- Add technicians to support groups
+- Assign roles and permissions
+- Bulk processing capabilities
+- Complete audit trail with logging
 
 ## Requirements
 
@@ -24,31 +41,41 @@ This Python script provides functionality to update Configuration Item (CI) fiel
    pip install -r requirements.txt
    ```
 
-## Configuration
-
-### Authentication Methods
+## Authentication
 
 Service Desk Plus supports two authentication methods:
 
 1. **Basic Authentication**: Using username and password/API key
 2. **Technician Key**: Using a technician key in headers
 
-### Configuration File
+## Usage
 
-Create a JSON configuration file (see `config_example.json`):
+### CMDB CI Updates
+
+#### Using Configuration File
+
+```bash
+python update_ci_cmdb.py config_example.json
+```
+
+#### Direct Script Usage
+
+```bash
+python update_ci_cmdb.py
+```
+
+#### Configuration Example
 
 ```json
 {
   "base_url": "https://your-sdp-server.company.com",
   "username": "api_user",
   "password": "your_api_password_or_key",
-  "technician_key": "your_technician_key_if_using_key_auth",
   "ci_updates": [
     {
       "ci_id": "CI001",
       "updates": {
         "name": "Updated Server Name",
-        "description": "Updated description",
         "status": "Active",
         "location": "Data Center A"
       }
@@ -57,47 +84,72 @@ Create a JSON configuration file (see `config_example.json`):
 }
 ```
 
-## Usage
+### User to Technician Conversion
 
-### Method 1: Using Configuration File
+#### Using Configuration File
 
 ```bash
-python update_ci_cmdb.py your_config.json
+python update_user_to_technician.py technician_config_example.json
 ```
 
-### Method 2: Direct Script Modification
-
-Edit the `config` dictionary in the `main()` function and run:
+#### Direct Script Usage
 
 ```bash
-python update_ci_cmdb.py
+python update_user_to_technician.py
+```
+
+#### Configuration Example
+
+```json
+{
+  "base_url": "https://your-sdp-server.company.com",
+  "username": "api_user",
+  "password": "your_api_password_or_key",
+  "user_conversions": [
+    {
+      "user_id": "USER001",
+      "technician_data": {
+        "employee_id": "EMP001",
+        "department": "IT Support",
+        "job_title": "Senior IT Technician",
+        "cost_per_hour": 75.00
+      },
+      "site_ids": ["SITE001", "SITE002"],
+      "group_ids": ["GROUP001"],
+      "role_ids": ["ROLE001", "ROLE002"]
+    }
+  ]
+}
 ```
 
 ## API Endpoints Used
 
+### CMDB CI Script
 - `GET /api/v3/cmdb/ci/{ci_id}` - Retrieve CI details
 - `PUT /api/v3/cmdb/ci/{ci_id}` - Update CI fields
 - `GET /api/v3/cmdb/ci` - Search CIs
 
-## Common CI Fields
+### Technician Script
+- `GET /api/v3/users/{user_id}` - Get user details
+- `POST /api/v3/users/{user_id}/convert_to_technician` - Convert user to technician
+- `POST /api/v3/technicians/{technician_id}/sites` - Assign sites
+- `POST /api/v3/technicians/{technician_id}/groups` - Assign groups
+- `POST /api/v3/technicians/{technician_id}/roles` - Assign roles
+- `GET /api/v3/sites`, `GET /api/v3/groups`, `GET /api/v3/roles` - Get reference data
 
-The script can update any CI fields supported by your Service Desk Plus instance. Common fields include:
+## Common Fields
 
-- `name` - CI name
-- `description` - Description
-- `status` - Status (Active, Inactive, etc.)
-- `asset_tag` - Asset tag
-- `serial_number` - Serial number
-- `location` - Location
-- `department` - Department
-- `owner` - Owner
-- `vendor` - Vendor
-- `model` - Model
-- `ip_address` - IP address
-- `operating_system` - Operating system
-- Custom fields as defined in your CMDB
+### CI Fields
+- `name`, `description`, `status`, `asset_tag`, `serial_number`
+- `location`, `department`, `owner`, `vendor`, `model`
+- `ip_address`, `operating_system`, custom fields
 
-## Examples
+### Technician Fields
+- `employee_id`, `department`, `phone`, `mobile`, `job_title`
+- `cost_per_hour`, `reporting_manager`, `hire_date`, `work_schedule`
+- `skills`, `certifications`, `notes`
+
+## Code Examples
 
 ### Update Single CI
 
@@ -116,56 +168,36 @@ updater.update_ci_fields("CI001", {
 })
 ```
 
-### Bulk Update from CSV/Excel
-
-You can extend the script to read from CSV files:
+### Convert User to Technician
 
 ```python
-import csv
+from update_user_to_technician import SDPTechnicianUpdater
 
-# Read from CSV
-ci_updates = []
-with open('ci_updates.csv', 'r') as csvfile:
-    reader = csv.DictReader(csvfile)
-    for row in reader:
-        ci_updates.append({
-            'ci_id': row['CI_ID'],
-            'updates': {k: v for k, v in row.items() if k != 'CI_ID' and v}
-        })
+updater = SDPTechnicianUpdater(
+    base_url="https://sdp.company.com",
+    username="api_user",
+    password="api_password"
+)
 
-results = updater.bulk_update_ci_fields(ci_updates)
-```
-
-### Search and Update
-
-```python
-# Search for servers
-servers = updater.search_ci({"name": "Server*"})
-
-# Update each server
-for server in servers:
-    updater.update_ci_fields(server['id'], {
-        "status": "Active",
-        "last_audit": "2024-01-08"
-    })
+updater.process_user_to_technician({
+    "user_id": "USER001",
+    "technician_data": {
+        "employee_id": "EMP001",
+        "department": "IT Support",
+        "job_title": "Technician"
+    },
+    "site_ids": ["SITE001"],
+    "group_ids": ["GROUP001"],
+    "role_ids": ["ROLE001"]
+})
 ```
 
 ## Logging
 
-The script provides comprehensive logging:
-
+Both scripts provide comprehensive logging:
 - INFO: Successful operations
 - WARNING: Non-critical issues
 - ERROR: Failed operations
-
-Logs are output to console with timestamps.
-
-## Error Handling
-
-- Network errors are caught and logged
-- API errors return appropriate status codes
-- Invalid configurations are reported
-- Partial bulk update failures are tracked
 
 ## Security Notes
 
@@ -180,7 +212,7 @@ Logs are output to console with timestamps.
 
 1. **401 Unauthorized**: Check credentials and authentication method
 2. **403 Forbidden**: Verify user permissions in Service Desk Plus
-3. **404 Not Found**: Verify CI ID exists
+3. **404 Not Found**: Verify IDs exist
 4. **Connection errors**: Check network connectivity and SDP URL
 
 ### Debug Mode
@@ -191,14 +223,14 @@ Enable debug logging by modifying the logging level:
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-## Extending the Script
+## Files in Repository
 
-The `SDPCMDBUpdater` class can be extended for additional functionality:
-
-- Add new methods for CI creation/deletion
-- Implement relationship management
-- Add validation for specific field types
-- Integrate with other ITSM tools
+- `update_ci_cmdb.py` - CMDB CI update script
+- `update_user_to_technician.py` - User to technician conversion script
+- `config_example.json` - CMDB configuration example
+- `technician_config_example.json` - Technician configuration example
+- `requirements.txt` - Python dependencies
+- `README.md` - This documentation
 
 ## Support
 

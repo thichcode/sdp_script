@@ -1,0 +1,68 @@
+{
+  "base_url": "https://your-sdp-server.company.com",
+  "username": "api_user",
+  "password": "your_api_password_or_key",
+  "technician_key": "your_technician_key_if_using_key_auth",
+  "user_conversions": [
+    {
+      "user_id": "USER001",
+      "technician_data": {
+        "employee_id": "EMP001",
+        "department": "IT Support",
+        "phone": "+1-555-0101",
+        "mobile": "+1-555-0102",
+        "job_title": "Senior IT Technician",
+        "cost_per_hour": 75.00,
+        "reporting_manager": "TECH_MANAGER_ID",
+        "hire_date": "2023-01-15",
+        "work_schedule": "Monday-Friday 9AM-5PM",
+        "skills": ["Windows Server", "Active Directory", "Network Administration"],
+        "certifications": ["Microsoft Certified", "Cisco Certified"],
+        "notes": "Experienced technician with 5+ years in IT support"
+      },
+      "site_ids": ["SITE001", "SITE002", "SITE003"],
+      "group_ids": ["GROUP001", "GROUP002"],
+      "role_ids": ["ROLE001", "ROLE002", "ROLE003"]
+    },
+    {
+      "user_id": "USER002",
+      "technician_data": {
+        "employee_id": "EMP002",
+        "department": "Help Desk",
+        "phone": "+1-555-0201",
+        "mobile": "+1-555-0202",
+        "job_title": "Help Desk Technician",
+        "cost_per_hour": 45.00,
+        "reporting_manager": "HELPDESK_MANAGER_ID",
+        "hire_date": "2023-06-01",
+        "work_schedule": "Monday-Friday 8AM-6PM, Rotating On-Call",
+        "skills": ["Windows 10/11", "Office 365", "Remote Support"],
+        "certifications": ["CompTIA A+", "ITIL Foundation"],
+        "notes": "Entry-level technician with strong customer service skills"
+      },
+      "site_ids": ["SITE001"],
+      "group_ids": ["GROUP003"],
+      "role_ids": ["ROLE004"]
+    },
+    {
+      "user_id": "USER003",
+      "technician_data": {
+        "employee_id": "EMP003",
+        "department": "Network Operations",
+        "phone": "+1-555-0301",
+        "mobile": "+1-555-0302",
+        "job_title": "Network Administrator",
+        "cost_per_hour": 85.00,
+        "reporting_manager": "NETWORK_MANAGER_ID",
+        "hire_date": "2022-03-10",
+        "work_schedule": "Monday-Friday 7AM-4PM, 24/7 On-Call Rotation",
+        "skills": ["Cisco Networking", "Firewall Management", "VPN", "SD-WAN"],
+        "certifications": ["CCNP", "Certified Information Systems Security Professional"],
+        "notes": "Senior network engineer with extensive infrastructure experience"
+      },
+      "site_ids": ["SITE001", "SITE002", "SITE004", "SITE005"],
+      "group_ids": ["GROUP004", "GROUP005"],
+      "role_ids": ["ROLE005", "ROLE006", "ROLE007"]
+    }
+  ]
+}
