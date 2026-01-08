@@ -1,0 +1,40 @@
+{
+  "base_url": "https://your-sdp-server.company.com",
+  "username": "api_user",
+  "password": "your_api_password_or_key",
+  "technician_key": "your_technician_key_if_using_key_auth",
+  "ci_updates": [
+    {
+      "ci_id": "CI001",
+      "updates": {
+        "name": "Web Server 01",
+        "description": "Production web server updated via API",
+        "status": "Active",
+        "asset_tag": "ASSET-2024-001",
+        "serial_number": "SN123456789",
+        "location": "Data Center A",
+        "department": "IT Operations",
+        "owner": "John Doe",
+        "vendor": "Dell",
+        "model": "PowerEdge R740",
+        "purchase_date": "2023-01-15",
+        "warranty_expiry": "2026-01-15",
+        "ip_address": "192.168.1.100",
+        "operating_system": "Windows Server 2022",
+        "cpu": "Intel Xeon Gold 6248",
+        "memory": "128GB",
+        "storage": "2TB SSD",
+        "custom_field_1": "Custom Value 1",
+        "custom_field_2": "Custom Value 2"
+      }
+    },
+    {
+      "ci_id": "CI002",
+      "updates": {
+        "status": "Inactive",
+        "decommission_date": "2024-01-08",
+        "notes": "Server decommissioned due to hardware failure"
+      }
+    }
+  ]
+}
